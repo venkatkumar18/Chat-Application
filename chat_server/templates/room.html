@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+body {
+  margin: 0 auto;
+  max-width: 800px;
+  padding: 0 20px;
+}
+
+.container {
+  border: 2px solid #dedede;
+  background-color: #f1f1f1;
+  border-radius: 5px;
+  padding: 10px;
+  margin: 10px 0;
+}
+
+.darker {
+  border-color: #ccc;
+  background-color: #ddd;
+}
+
+.container::after {
+  content: "";
+  clear: both;
+  display: table;
+}
+
+.container img {
+  float: left;
+  max-width: 60px;
+  width: 100%;
+  margin-right: 20px;
+  border-radius: 50%;
+}
+
+.container img.right {
+  float: right;
+  margin-left: 20px;
+  margin-right:0;
+}
+
+.time-right {
+  float: right;
+  color: #aaa;
+}
+
+.time-left {
+  float: left;
+  color: #999;
+}
+</style>
+<script   src="https://code.jquery.com/jquery-3.1.1.min.js"   integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="   crossorigin="anonymous"></script>
+</head>
+<body>
+
+<h2>Room Number - {{room}} </h2>
+
+<div id="display">
+        <p>Welcome Message from admin</p>
+
+    <div class="container darker" id="chat-message">
+    <!--  <b>Tom</b><p>Hello Everyone, How Are You Guys Doing?</p>-->
+    <!--  <span class="time-left">20th, April 2021</span>-->
+<!--        <p>{{messages}}</p>-->
+            {% for i in messages %}
+                   <b> {{i.fromEmail}}</b><span> - {{i.message}}</span>
+                    <p></p>
+            {% endfor %}
+
+
+    </div>
+<!--    &ndash;&gt;-->
+
+</div>
+
+
+
+<div class="container">
+    <style>
+    input[type=text], select {
+    width: 100%;
+    padding: 12px 20px;
+    margin: 8px 0;
+    display: inline-block;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+    }
+
+    input[type=submit] {
+    width: 100%;
+    background-color: #4CAF50;
+    color: white;
+    padding: 14px 20px;
+    margin: 8px 0;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    }
+
+    input[type=submit]:hover {
+    background-color: #45a049;
+    }
+
+    div {
+    border-radius: 5px;
+    background-color: #f2f2f2;
+    padding: 20px;
+    }
+    #chat-end{
+    width: 100%;
+    background-color: #f0330b;
+    color: white;
+    padding: 14px 20px;
+    margin: 8px 0;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    }
+    #chat-end:hover{
+    background-color:#b92505
+    }
+
+    #say_bye{
+    width: 100%;
+    background-color: #e59f1a;
+    color: white;
+    padding: 14px 20px;
+    margin: 8px 0;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    }
+    #say_bye:hover{
+    background-color:#897106
+    }
+
+
+
+    </style>
+
+    <form id="post-form">
+        {% csrf_token %}
+
+<!--        <input type="hidden" name="username" id="username" value="{{username}}">-->
+<!--        <input type="hidden" name="room_id" id="room_id" value="{{room_details.id}}">-->
+<!--        <input type="hidden" name="room_name" id="room_name" value="{{room_details.chatRoom}}">-->
+        <input type="text" name="message" id="message-input" width="100px" />
+        <input type="submit" id="chat-submit" value="Send">
+    </form>
+    <form id="post-form2">
+<!--        {% csrf_token %}-->
+            <input type="hidden" name="username" id="username" value="{{username}}">
+            <input type="hidden" name="room_id" id="room_id" value="{{room_details.id}}">
+            <input type="hidden" name="room_name" id="room_name" value="{{room_details.chatRoom}}">
+            <input type="submit" id="say_bye" value="Say Bye">
+<!--        <input name="authenticity_token" value="<%= authenticity_token %>" type="hidden">-->
+    </form>
+
+    <form id="post-form3"  method="POST" action="trigger/">
+        {% csrf_token %}
+            <input type="hidden" name="username3" id="username3" value="{{username}}">
+            <input type="hidden" name="room_id3" id="room_id3" value="{{room_details.id}}">
+            <input type="hidden" name="room_name3" id="room_name3" value="{{room_details.chatRoom}}">
+            <input type="submit" id="chat-end" value="End Chat">
+<!--        <input name="authenticity_token" value="<%= authenticity_token %>" type="hidden">-->
+    </form>
+
+</div>
+
+
+<!--{{room_details}}-->
+<!--{{room}}-->
+<!--{{username}}-->
+{% block scripts %}
+    {{ room|json_script:"json-roomname" }}
+<!--    {{ request.username|json_script:"json-username" }}-->
+<script>
+    const roomName = JSON.parse(document.getElementById('json-roomname').textContent);
+        const userName = document.getElementById('username').value;
+        console.log('Room Name - ',roomName)
+<!--        console.log(typeof roomName);-->
+        console.log('User Name - ',userName)
+        const chatSocket = new WebSocket(
+            'ws://'
+            + window.location.host
+            + '/ws/'
+            + roomName
+            + '/'
+        );
+
+       chatSocket.onmessage = function(e) {
+            console.log("Message Received");
+            const data = JSON.parse(e.data);
+
+            if (data.message) {
+                document.querySelector('#chat-message').innerHTML += ('<b>' + data.username + '</b><span> - ' + data.message + '<span><p></p>');
+            } else {
+                alert('The message was empty!')
+            }
+        };
+
+        document.querySelector('#chat-submit').onclick = function(e) {
+        e.preventDefault();
+        const messageInputDom = document.querySelector('#message-input');
+        const message = messageInputDom.value;
+
+        chatSocket.send(JSON.stringify({
+            'message': message,
+            'username': userName,
+            'room': roomName
+        }));
+
+        messageInputDom.value = '';
+};
+
+        document.querySelector('#say_bye').onclick = function(e) {
+        e.preventDefault();
+        const messageInputDom = document.querySelector('#message-input');
+        const message = userName+" Said Bye and gonna leave the chat" ;
+
+        chatSocket.send(JSON.stringify({
+            'message': message,
+            'username': "Admin",
+            'room': 1000
+        }));
+
+        messageInputDom.value = '';
+};
+
+
+
+        chatSocket.onopen = function(e) {
+        console.log("Chat Socket Connected");
+    }
+        chatSocket.onclose = function(e) {
+            console.log('The socket closed unexpectedly');
+            console.log(e);
+        };
+</script>
+{% endblock %}
+</body>
+
+<!--<script type="text/javascript">-->
+<!--  $(document).on('submit','#post-form',function(e){-->
+<!--    e.preventDefault();-->
+
+<!--    $.ajax({-->
+<!--      type:'POST',-->
+<!--      url:'/send',-->
+<!--      data:{-->
+<!--          username:$('#username').val(),-->
+<!--          room_id:$('#room_id').val(),-->
+<!--          message:$('#message').val(),-->
+<!--        csrfmiddlewaretoken:$('input[name=csrfmiddlewaretoken]').val(),-->
+<!--      },-->
+<!--      success: function(data){-->
+<!--         //alert(data)-->
+<!--      }-->
+<!--    });-->
+<!--    document.getElementById('message').value = ''-->
+<!--  });-->
+<!--</script>-->
+
+
+</html>

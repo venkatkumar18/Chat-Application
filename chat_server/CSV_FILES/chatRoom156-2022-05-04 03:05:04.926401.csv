@@ -1,0 +1,5 @@
+chatRoom,fromEmail,createdDatetime,message,id,toEmail
+156,isvenkatkumar@gmail.com,2022-05-04T03:04:10.022243+0000,Hey Venkat,1,venkatkumar.i_int@payoda.com
+156,venkatkumar.i_int@payoda.com,2022-05-04T03:04:10.022243+0000,Hi Kumar,2,isvenkatkumar@gmail.com
+156,isvenkatkumar@gmail.com,2022-05-04T03:04:10.022243+0000,Is everything fine??,3,venkatkumar.i_int@payoda.com
+156,venkatkumar.i_int@payoda.com,2022-05-04T03:04:10.022243+0000,Yeah i think so,4,isvenkatkumar@gmail.com

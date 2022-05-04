@@ -16,7 +16,7 @@ Installed App -> api  , added 'api.apps.ApiConfig' to INSTALLED_APPS,
                          channels , added channels to INSTALLED_APPS
 
 Models:
-  Created two models for this project
+   Created two models for this project
   
   Chat_table:
     *Used Mariadb for creating this table 
@@ -61,7 +61,7 @@ Celery:
     All the celery configuration is written inside settings.py
     Then created the celery_app inside the chat_server.celery.py file.
     Wrote the celery methods inside api.tasks
-    Once the End chat button is clicked the celery task fetch_and_upload will be triggered , it will get the room name as a parameter. The function will fetch all the records in the dynamodb belonging to the chatroom. Then it will convert the response['Items'] into a csv file. The csv file will be stored inside CSV_FILES locally. Then the csv file will be uploaded to Amazon S3. Then we will get the object_url and will send the object_url to hostEmail and participantEmail of that chatRoom through Email. The email is sent thorugh "smtp.gamil.com" service.All the email configurations are written inside settings.py . Atlast the object_url and completedDatetime is updated in Chat_table for that chatRoom. for fetching and uploading record i had used boto3 library.
+    Once the End chat button is clicked the celery task fetch_and_upload will be triggered , it will get the room name as a parameter. The function will fetch all the records in the dynamodb belonging to the chatroom. Then it will convert the response['Items'] into a csv file. The csv file will be stored inside CSV_FILES locally. Then the csv file will be uploaded to Amazon S3. Then we will get the object_url and will send the object_url to hostEmail and participantEmail of that chatRoom through Email. The email is sent thorugh "smtp.gamil.com" service.All the email configurations are written inside settings.py .In the email the object_url is sent so the users can click the link and download the chat history. Atlast the object_url and completedDatetime is updated in Chat_table for that chatRoom. for fetching and uploading record i had used boto3 library.
     
 Celery_ Beat:
     I had added the celery_beat configurations inside chat_server.celery.py file . I had configured in a way that it will call the scheduler method which is inside tasks at 11.59 pm everyday.

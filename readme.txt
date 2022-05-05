@@ -69,7 +69,7 @@ Celery_ Beat:
     
 Steps for running the project
 initiating redis  - redis-server
-initiating celery - celery -A chat_server worker --loglevel=info
+initiating celery worker - celery -A chat_server worker --loglevel=info
 initiating celery beat - celery -A chat_server beat -l INFO
 
 

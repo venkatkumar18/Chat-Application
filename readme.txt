@@ -1,5 +1,8 @@
 Creating Chat server using Django
 
+Installing packages through requirements.txt file 
+   pip install -r requirements.txt
+
 Packages Used - 
   Django         -> version (3.1.13)   -> pip install Django
   channels       -> version (3.0.4)    -> pip install channels
@@ -19,20 +22,20 @@ Models:
    Created two models for this project
   
   Chat_table:
-    *Used Mariadb for creating this table 
-    *Used chatApplication as database 
-    *Created 7 fields - hostEmail , participantEmail,chathistory,chatRoom,status,initiatedDateTime,completedDateTime and id(primary key)
-    *initially setting the initiatedatetime and comlpetedDatetime to current time after the completion of the chat the completedDatetime is changed to that time
-    *The First person who enter the room will be hostEmail , the second person to enter the same rom will be participantEmail.
-    *Initially the chatHistory will be empty at the end it is modified , status is set to 'inprogress' after the end it will be changed to 'completed'
+    Used Mariadb for creating this table 
+    Used chatApplication as database 
+    Created 7 fields - hostEmail , participantEmail,chathistory,chatRoom,status,initiatedDateTime,completedDateTime and id(primary key)
+    initially setting the initiatedatetime and comlpetedDatetime to current time after the completion of the chat the completedDatetime is changed to that time
+    The First person who enter the room will be hostEmail , the second person to enter the same rom will be participantEmail.
+    Initially the chatHistory will be empty at the end it is modified , status is set to 'inprogress' after the end it will be changed to 'completed'
   Chat:
-    *Used Dynamodb for creating this table
-    *table_name = 'message'
-    *region = 'us-east-1'
-    *created 5 field - id(hash_key),fromEmail,toEmail,chatRoom,createdDatetime,message
-    *getting the id from a file names id.txt (because setting it to static value overwrites the record once the server stoped and started again so only i created a file and get the id everytime by reading the value ) initially it is set to 1 after insertion it will increased by 1.
-    *getting the createdDatetime from Chat_table.createdDatetime
-    *getting the fromEmail and toEmail from Chat_table.fromEmail and toEmail by checking some condition to determine who is the sender and who is the receiver
+    Used Dynamodb for creating this table
+    table_name = 'message'
+    region = 'us-east-1'
+    created 5 field - id(hash_key),fromEmail,toEmail,chatRoom,createdDatetime,message
+    getting the id from a file names id.txt (because setting it to static value overwrites the record once the server stoped and started again so only i created a file and get the id everytime by reading the value ) initially it is set to 1 after insertion it will increased by 1.
+    getting the createdDatetime from Chat_table.createdDatetime
+    getting the fromEmail and toEmail from Chat_table.fromEmail and toEmail by checking some condition to determine who is the sender and who is the receiver
     
 Templates:
     home.html
@@ -71,6 +74,7 @@ Steps for running the project
 initiating redis  - redis-server
 initiating celery worker - celery -A chat_server worker --loglevel=info
 initiating celery beat - celery -A chat_server beat -l INFO
+starting our project - python manage.py runserver
 
 
     
